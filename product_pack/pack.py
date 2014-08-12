@@ -153,13 +153,21 @@ class sale_order_line(orm.Model):
         'pack_depth': 0,
     }
 
+    def copy_data(self, cr, uid, id, default=None, context=None):
+        default = default or {}
+        default.update(pack_parent_line_id=False, pack_child_line_ids=[])
+        return super(sale_order_line, self).copy_data(cr, uid, id, default,
+                                                      context=context)
+
 
 class sale_order(orm.Model):
     _inherit = 'sale.order'
 
     def create(self, cr, uid, vals, context=None):
+        context = context or {}
         result = super(sale_order, self).create(cr, uid, vals, context)
-        self.expand_packs(cr, uid, [result], context)
+        if not context.get('__copy_data_seen'):
+            self.expand_packs(cr, uid, [result], context)
         return result
 
     def write(self, cr, uid, ids, vals, context=None):
@@ -343,13 +351,21 @@ class purchase_order_line(orm.Model):
         'pack_depth': 0,
     }
 
+    def copy_data(self, cr, uid, id, default=None, context=None):
+        default = default or {}
+        default.update(pack_parent_line_id=False, pack_child_line_ids=[])
+        return super(purchase_order_line, self).copy_data(cr, uid, id, default,
+                                                          context=context)
+
 
 class purchase_order(orm.Model):
     _inherit = 'purchase.order'
 
     def create(self, cr, uid, vals, context=None):
+        context = context or {}
         result = super(purchase_order, self).create(cr, uid, vals, context)
-        self.expand_packs(cr, uid, [result], context)
+        if not context.get('__copy_data_seen'):
+            self.expand_packs(cr, uid, [result], context)
         return result
 
     def write(self, cr, uid, ids, vals, context=None):
