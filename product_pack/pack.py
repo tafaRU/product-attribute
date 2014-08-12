@@ -271,7 +271,6 @@ class sale_order(orm.Model):
                     else:
                         uos_id = False
                         uos_qty = quantity
-
                     vals = {
                         'order_id': order.id,
                         'name': '%s%s' % (
@@ -298,7 +297,6 @@ class sale_order(orm.Model):
                         'move_ids': [(6, 0, [])],
                         'discount': discount,
                         'number_packages': False,
-                        'notes': False,
                         'th_weight': False,
                         'state': 'draft',
                         'pack_parent_line_id': line.id,
